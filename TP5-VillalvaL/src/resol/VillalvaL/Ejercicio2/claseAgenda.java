@@ -3,31 +3,29 @@ package resol.VillalvaL.Ejercicio2;
 import java.util.ArrayList;
 
 public class claseAgenda {
+    String salto = System.lineSeparator();
 
     private ArrayList<claseContacto> contactos;
-    private int maxContactos;
+    private int max;
 
-
-    public claseAgenda() {
-        this.maxContactos = 10;
-        this.contactos = new ArrayList<>();
+    public claseAgenda(int max) {
+        this.max = max;
+        contactos = new ArrayList<>();
     }
 
-
-    public claseAgenda(int maxContactos) {
-        this.maxContactos = maxContactos;
-        this.contactos = new ArrayList<>();
+    public claseAgenda() {
+        this(10);
     }
 
     public void agregarContacto(claseContacto c) {
-        if (agendaLlena()) {
+        if (contactos.size() >= max) {
             System.out.println("Agenda llena");
             return;
         }
 
-        for (claseContacto contacto : contactos) {
-            if (contacto.getTelefono().equals(c.getTelefono())) {
-                System.out.println("Ya existe un contacto con ese número");
+        for (claseContacto con : contactos) {
+            if (con.getTelefono().equals(c.getTelefono())) {
+                System.out.println("Telefono duplicado");
                 return;
             }
         }
@@ -36,7 +34,15 @@ public class claseAgenda {
         System.out.println("Contacto agregado");
     }
 
-
+    public void listar() {
+         if (contactos.isEmpty()) {
+            System.out.println("Agenda vacía");
+            return;
+        }
+        for (claseContacto c : contactos) {
+            System.out.println(c.getNombre() + " - " + c.getTelefono() + salto);
+        }
+    }
     public boolean existeContacto(claseContacto c) {
         for (claseContacto contacto : contactos) {
             if (contacto.getTelefono().equals(c.getTelefono())) {
@@ -45,21 +51,7 @@ public class claseAgenda {
         }
         return false;
     }
-
-
-    public void listarContactos() {
-        if (contactos.isEmpty()) {
-            System.out.println("Agenda vacía");
-            return;
-        }
-
-        for (claseContacto c : contactos) {
-            System.out.println(c);
-        }
-    }
-
-
-    public void buscaContacto(String nombre) {
+     public void buscarContacto(String nombre) {
         for (claseContacto c : contactos) {
             if (c.getNombre().equalsIgnoreCase(nombre)) {
                 System.out.println("Teléfono: " + c.getTelefono());
@@ -68,20 +60,16 @@ public class claseAgenda {
         }
         System.out.println("No se encontró el contacto");
     }
-
+    public int espacioLibre() {
+        return max - contactos.size();
+    }
     public void eliminarContacto(claseContacto c) {
-        if (contactos.removeIf(contacto -> contacto.getTelefono().equals(c.getTelefono()))) {
-            System.out.println("Contacto eliminado");
+         String nombre = c.getNombre();
+        if (contactos.removeIf(contacto ->
+            contacto.getNombre().equalsIgnoreCase(nombre))) {
+            System.out.println("Contacto eliminado.");
         } else {
             System.out.println("No se encontró el contacto");
         }
-    }
-
-    public boolean agendaLlena() {
-        return contactos.size() >= maxContactos;
-    }
-
-    public int espacioLibre() {
-        return maxContactos - contactos.size();
     }
 }
